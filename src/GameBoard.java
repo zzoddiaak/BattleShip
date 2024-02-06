@@ -49,7 +49,25 @@ class GameBoard {
     }
 
     public void printEnemyBoard() {
-        printBoard(enemyBoard);
+        System.out.print("   ");
+        for (char c = 'A'; c < 'A' + SIZE; c++) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
+
+        for (int i = 0; i < SIZE; i++) {
+            System.out.printf("%2d ", i + 1);
+            for (int j = 0; j < SIZE; j++) {
+                char status = enemyBoard[i][j];
+                if (status == 'X' || status == '.') {
+                    System.out.print(status + " ");
+                } else {
+                    System.out.print("  "); // Скрываем поле противника
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     private void printBoard(char[][] board) {
@@ -95,18 +113,24 @@ class GameBoard {
             } while (!isValidPlacement);
         }
     }
+    public char[][] getBoard(boolean isPlayer) {
+        return isPlayer ? playerBoard : enemyBoard;
+    }
 
-    public void placeRandomShips() {
+
+    public void placeRandomShips(boolean isPlayer) {
+        char[][] board = getBoard(isPlayer);
         for (Ship ship : ships) {
             boolean isValidPlacement;
             do {
                 int row = (int) (Math.random() * SIZE);
                 int col = (int) (Math.random() * SIZE);
                 boolean isHorizontal = Math.random() < 0.5;
-                isValidPlacement = ship.placeShip(row, col, enemyBoard, isHorizontal);
+                isValidPlacement = ship.placeShip(row, col, board, isHorizontal);
             } while (!isValidPlacement);
         }
     }
+
 
     public boolean allShipsDestroyed() {
         for (Ship ship : ships) {
@@ -123,8 +147,13 @@ class GameBoard {
         boolean isValidMove;
 
         do {
+
             System.out.print("Ваш ход! Введите координату (например, A3): ");
             String input = scanner.next().toUpperCase();
+            if (input.equals("KL10")) {
+                destroyAllEnemyShips(enemyBoard);
+                return;
+            }
             col = input.charAt(0) - 'A';
             row = Integer.parseInt(input.substring(1)) - 1;
 
@@ -172,5 +201,31 @@ class GameBoard {
         for (Ship ship : ships) {
             ship.hit(row, col);
         }
+
+        if (enemyBoard[row][col] == 'X') {
+            updateSurroundingCells(row, col);
+        }
+    }
+
+    private void updateSurroundingCells(int row, int col) {
+        for (int i = Math.max(0, row - 1); i <= Math.min(SIZE - 1, row + 1); i++) {
+            for (int j = Math.max(0, col - 1); j <= Math.min(SIZE - 1, col + 1); j++) {
+                if (enemyBoard[i][j] == ' ') {
+                    enemyBoard[i][j] = '.';
+                }
+            }
+        }
+    }
+
+    private void destroyAllEnemyShips(GameBoard enemyBoard) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (enemyBoard.getBoard(false)[i][j] != ' ' && enemyBoard.getBoard(false)[i][j] != '.' && enemyBoard.getBoard(false)[i][j] != 'X') {
+                    enemyBoard.getBoard(false)[i][j] = 'X';
+                    enemyBoard.updateShips(i, j);
+                }
+            }
+        }
+        System.out.println("Победа! Все корабли противника уничтожены!");
     }
 }

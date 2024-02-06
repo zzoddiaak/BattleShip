@@ -1,5 +1,6 @@
 import java.util.*;
 class GameManager {
+
     private Map<String, Player> players;
     private Player currentAdmin;
 
@@ -30,17 +31,25 @@ class GameManager {
                 player = new Player(playerName);
                 players.put(playerName, player);
             }
-
+            GameBoard enemyBoard = new GameBoard();
             GameBoard playerBoard = new GameBoard();
             player.addGame(playerBoard);
-
-            // Размещение кораблей игрока
-            playerBoard.placeShips();
-
+            System.out.println("Выберете расстановку кораблей");
+            System.out.println("1. Ручная");
+            System.out.println("2. Автоматическая");
+            int place = scanner.nextInt();
+            switch (place){
+                case 1:
+                    playerBoard.placeShips();
+                break;
+                case 2:
+                    playerBoard.placeRandomShips(true);
+                break;
+                default:
+                    System.out.println("Неверный выбор");
+            }
             // Размещение кораблей противника (бота)
-            playerBoard.placeRandomShips();
-
-            GameBoard enemyBoard = new GameBoard();
+            enemyBoard.placeRandomShips(false);
 
             // Игровой цикл
             while (!playerBoard.allShipsDestroyed()) {
@@ -49,7 +58,7 @@ class GameManager {
                 System.out.println("Поле противника:");
                 enemyBoard.printEnemyBoard();
 
-                // Ход игрока
+
                 playerBoard.playerMove(enemyBoard);
 
                 // Ход противника (бота)
