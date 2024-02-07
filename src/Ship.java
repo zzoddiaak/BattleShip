@@ -61,20 +61,6 @@ class Ship implements ShipPlacement {
         return true;
     }
 
-    public void hit(int row, int col) {
-        for (int i = 0; i < size; i++) {
-            if (i == 0) {
-                if (row == 0) {
-                    segments[i] = false;
-                }
-            } else {
-                if (row == 0) {
-                    segments[i] = false;
-                }
-            }
-        }
-        hits++;
-    }
 
     public boolean isDestroyed() {
         return hits == size;
