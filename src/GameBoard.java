@@ -141,13 +141,31 @@ class GameBoard {
         return true;
     }
 
+
+
+    private void checkIfShipKilled(int row, int col, char[][] board) {
+        // Проверка наличия символа 'O' вокруг данного ранения на расстоянии одной клетки
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = col - 1; j <= col + 1; j++) {
+                if (i >= 0 && i < SIZE && j >= 0 && j < SIZE && board[i][j] == 'O') {
+                    return; // Найден 'O', корабль не убит
+                }
+            }
+        }
+
+        System.out.println("Корабль убит!");
+    }
+
+    private boolean isValidMove(int row, int col, char[][] board) {
+        return row >= 0 && row < SIZE && col >= 0 && col < SIZE && board[row][col] != '.' && board[row][col] != 'X';
+    }
+
     public void playerMove(GameBoard enemyBoard) {
         Scanner scanner = new Scanner(System.in);
         int row, col;
         boolean isValidMove;
 
         do {
-
             System.out.print("Ваш ход! Введите координату (например, A3): ");
             String input = scanner.next().toUpperCase();
             col = input.charAt(0) - 'A';
@@ -162,14 +180,17 @@ class GameBoard {
         if (enemyBoard.enemyBoard[row][col] == ' ') {
             System.out.println("Мимо!");
             enemyBoard.enemyBoard[row][col] = '.';
+            return; // Если мимо, ход передается противнику, завершаем метод
         } else {
             System.out.println("Ранил!");
             enemyBoard.enemyBoard[row][col] = 'X';
-        }
-    }
 
-    private boolean isValidMove(int row, int col, char[][] board) {
-        return row >= 0 && row < SIZE && col >= 0 && col < SIZE && board[row][col] != '.' && board[row][col] != 'X';
+            // Проверка на убийство корабля
+            checkIfShipKilled(row, col, enemyBoard.enemyBoard);
+
+            // В случае попадания, игрок получает еще один ход
+            playerMove(enemyBoard);
+        }
     }
 
     public void botMove(GameBoard playerBoard) {
@@ -188,7 +209,14 @@ class GameBoard {
         } else {
             System.out.println("Ход противника: Ранил!");
             playerBoard.playerBoard[row][col] = 'X';
+
+            // Проверка на убийство корабля
+            checkIfShipKilled(row, col, playerBoard.playerBoard);
+
+            // В случае попадания, противник получает еще один ход
+            botMove(playerBoard);
         }
     }
+
 
 }

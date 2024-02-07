@@ -74,9 +74,6 @@ class Ship implements ShipPlacement {
             }
         }
         hits++;
-        if (isDestroyed()) {
-            System.out.println("Убил!");
-        }
     }
 
     public boolean isDestroyed() {
