@@ -187,6 +187,7 @@ class GameBoard {
 
             // Проверка на убийство корабля
             checkIfShipKilled(row, col, enemyBoard.enemyBoard);
+            enemyBoard.printEnemyBoard();
 
             // В случае попадания, игрок получает еще один ход
             playerMove(enemyBoard);
