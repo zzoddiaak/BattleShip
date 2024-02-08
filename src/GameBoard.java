@@ -154,6 +154,7 @@ class GameBoard {
         }
 
         System.out.println("Корабль убит!");
+        markSurroundingDots(row,col,board);
     }
 
     private boolean isValidMove(int row, int col, char[][] board) {
@@ -199,6 +200,45 @@ class GameBoard {
         boolean isValidMove;
 
         do {
+            // Ищем пораженную клетку
+            boolean foundHit = false;
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    if (playerBoard.playerBoard[i][j] == 'X') {
+                        foundHit = true;
+                        row = i;
+                        col = j;
+
+                        // Проверяем возможные ходы вокруг пораженной клетки
+                        for (int r = -1; r <= 1; r++) {
+                            for (int c = -1; c <= 1; c++) {
+                                if ((r == 0 || c == 0) && !(r == 0 && c == 0)) {
+                                    int newRow = row + r;
+                                    int newCol = col + c;
+                                    isValidMove = isValidMove(newRow, newCol, playerBoard.playerBoard);
+                                    if (isValidMove) {
+                                        // Выполняем ход, если он допустим
+                                        if (playerBoard.playerBoard[newRow][newCol] == ' ') {
+                                            System.out.println("Ход противника: Мимо!");
+                                            playerBoard.playerBoard[newRow][newCol] = '.';
+                                        } else {
+                                            System.out.println("Ход противника: Ранил!");
+                                            playerBoard.playerBoard[newRow][newCol] = 'X';
+
+                                            // Проверяем на уничтожение корабля
+                                            checkIfShipKilled(newRow, newCol, playerBoard.playerBoard);
+                                            return; // Завершаем метод, чтобы бот не ходил дальше после поражения корабля
+                                        }
+                                        return; // Завершаем метод, чтобы бот не ходил дальше после совершения хода
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Если не была найдена пораженная клетка, бот делает случайный ход
             row = (int) (Math.random() * SIZE);
             col = (int) (Math.random() * SIZE);
             isValidMove = isValidMove(row, col, playerBoard.playerBoard);
@@ -213,11 +253,25 @@ class GameBoard {
 
             // Проверка на убийство корабля
             checkIfShipKilled(row, col, playerBoard.playerBoard);
-
-            // В случае попадания, противник получает еще один ход
             botMove(playerBoard);
         }
     }
 
+
+
+    private void markSurroundingDots(int row, int col, char[][] board) {
+        // Массив смещений для обхода соседних клеток
+        int[] dr = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] dc = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+        // Обходим все соседние клетки и помечаем их точками
+        for (int i = 0; i < dr.length; i++) {
+            int newRow = row + dr[i];
+            int newCol = col + dc[i];
+            if (isValidMove(newRow, newCol, board) && board[newRow][newCol] != 'X') {
+                board[newRow][newCol] = '.';
+            }
+        }
+    }
 
 }
