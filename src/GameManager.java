@@ -46,24 +46,15 @@ class GameManager {
                 default:
                     System.out.println("Неверный выбор");
             }
-            // Размещение кораблей противника (бота)
             enemyBoard.placeRandomShips(false);
-
-            // Игровой цикл
             while (!playerBoard.allShipsDestroyed()) {
                 System.out.println("Ваше поле:");
                 playerBoard.printPlayerBoard();
                 System.out.println("Поле противника:");
                 enemyBoard.printEnemyBoard();
-
-
                 playerBoard.playerMove(enemyBoard);
-
-                // Ход противника (бота)
                 enemyBoard.botMove(playerBoard);
             }
-
-            // Определение победителя
             if (playerBoard.allShipsDestroyed()) {
                 System.out.println("Вы проиграли! Ваши корабли разрушены.");
             } else {

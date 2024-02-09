@@ -62,7 +62,7 @@ class GameBoard {
                 if (status == 'X' || status == '.') {
                     System.out.print(status + " ");
                 } else {
-                    System.out.print("  "); // Скрываем поле противника
+                    System.out.print("  ");
                 }
             }
             System.out.println();
@@ -140,15 +140,11 @@ class GameBoard {
         }
         return true;
     }
-
-
-
     private void checkIfShipKilled(int row, int col, char[][] board) {
-        // Проверка наличия символа 'O' вокруг данного ранения на расстоянии одной клетки
         for (int i = row - 1; i <= row + 1; i++) {
             for (int j = col - 1; j <= col + 1; j++) {
                 if (i >= 0 && i < SIZE && j >= 0 && j < SIZE && board[i][j] == 'O') {
-                    return; // Найден 'O', корабль не убит
+                    return;
                 }
             }
         }
@@ -181,16 +177,12 @@ class GameBoard {
         if (enemyBoard.enemyBoard[row][col] == ' ') {
             System.out.println("Мимо!");
             enemyBoard.enemyBoard[row][col] = '.';
-            return; // Если мимо, ход передается противнику, завершаем метод
+            return;
         } else {
             System.out.println("Ранил!");
             enemyBoard.enemyBoard[row][col] = 'X';
-
-            // Проверка на убийство корабля
             checkIfShipKilled(row, col, enemyBoard.enemyBoard);
             enemyBoard.printEnemyBoard();
-
-            // В случае попадания, игрок получает еще один ход
             playerMove(enemyBoard);
         }
     }
@@ -198,9 +190,7 @@ class GameBoard {
     public void botMove(GameBoard playerBoard) {
         int row, col;
         boolean isValidMove;
-
         do {
-            // Ищем пораженную клетку
             boolean foundHit = false;
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j < SIZE; j++) {
@@ -208,8 +198,6 @@ class GameBoard {
                         foundHit = true;
                         row = i;
                         col = j;
-
-                        // Проверяем возможные ходы вокруг пораженной клетки
                         for (int r = -1; r <= 1; r++) {
                             for (int c = -1; c <= 1; c++) {
                                 if ((r == 0 || c == 0) && !(r == 0 && c == 0)) {
@@ -217,19 +205,16 @@ class GameBoard {
                                     int newCol = col + c;
                                     isValidMove = isValidMove(newRow, newCol, playerBoard.playerBoard);
                                     if (isValidMove) {
-                                        // Выполняем ход, если он допустим
                                         if (playerBoard.playerBoard[newRow][newCol] == ' ') {
                                             System.out.println("Ход противника: Мимо!");
                                             playerBoard.playerBoard[newRow][newCol] = '.';
                                         } else {
                                             System.out.println("Ход противника: Ранил!");
                                             playerBoard.playerBoard[newRow][newCol] = 'X';
-
-                                            // Проверяем на уничтожение корабля
                                             checkIfShipKilled(newRow, newCol, playerBoard.playerBoard);
-                                            return; // Завершаем метод, чтобы бот не ходил дальше после поражения корабля
+                                            return;
                                         }
-                                        return; // Завершаем метод, чтобы бот не ходил дальше после совершения хода
+                                        return;
                                     }
                                 }
                             }
@@ -237,8 +222,6 @@ class GameBoard {
                     }
                 }
             }
-
-            // Если не была найдена пораженная клетка, бот делает случайный ход
             row = (int) (Math.random() * SIZE);
             col = (int) (Math.random() * SIZE);
             isValidMove = isValidMove(row, col, playerBoard.playerBoard);
@@ -250,8 +233,6 @@ class GameBoard {
         } else {
             System.out.println("Ход противника: Ранил!");
             playerBoard.playerBoard[row][col] = 'X';
-
-            // Проверка на убийство корабля
             checkIfShipKilled(row, col, playerBoard.playerBoard);
             botMove(playerBoard);
         }

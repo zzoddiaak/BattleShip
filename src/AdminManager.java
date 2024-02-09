@@ -88,8 +88,6 @@ public class AdminManager {
             List<GameBoard> games = player.getPlayedGames();
             if (gameNumber >= 1 && gameNumber <= games.size()) {
                 GameBoard gameToArchive = games.get(gameNumber - 1);
-                // Добавить логику архивации (например, сохранение в файл или другую структуру данных)
-                // В данном примере просто удалим игру из списка игр у игрока
                 games.remove(gameToArchive);
                 System.out.println("Игра архивирована.");
             } else {

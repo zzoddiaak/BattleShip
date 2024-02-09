@@ -35,8 +35,6 @@ class Ship implements ShipPlacement {
         if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
             return false;
         }
-
-        // Проверяем, что корабль не выходит за границы поля
         if (isHorizontal) {
             if (col + size > board[0].length) {
                 return false;
@@ -46,8 +44,6 @@ class Ship implements ShipPlacement {
                 return false;
             }
         }
-
-        // Проверяем, что корабль не пересекается с другими кораблями и расстояние между кораблями не менее одной клетки
         for (int i = row - 1; i <= row + size; i++) {
             for (int j = col - 1; j <= col + size; j++) {
                 if (i >= 0 && i < board.length && j >= 0 && j < board[0].length) {
@@ -60,8 +56,6 @@ class Ship implements ShipPlacement {
 
         return true;
     }
-
-
     public boolean isDestroyed() {
         return hits == size;
     }
