@@ -241,11 +241,9 @@ class GameBoard {
 
 
     private void markSurroundingDots(int row, int col, char[][] board) {
-        // Массив смещений для обхода соседних клеток
         int[] dr = { -1, -1, -1, 0, 0, 1, 1, 1 };
         int[] dc = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
-        // Обходим все соседние клетки и помечаем их точками
         for (int i = 0; i < dr.length; i++) {
             int newRow = row + dr[i];
             int newCol = col + dc[i];

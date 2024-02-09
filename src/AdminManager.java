@@ -1,5 +1,6 @@
+import java.io.*;
 import java.util.*;
-public class AdminManager {
+class AdminManager {
     private Map<String, Player> players;
 
     public AdminManager(Map<String, Player> players) {
@@ -35,7 +36,8 @@ public class AdminManager {
                 default:
                     System.out.println("Неверный выбор. Попробуйте еще раз.");
             }
-        }    }
+        }
+    }
 
     private void viewAllGames() {
         System.out.println("\nСписок всех сыгранных игр:");
@@ -75,25 +77,16 @@ public class AdminManager {
     }
 
     private void archiveGame() {
-        viewAllGames();
+        try (BufferedReader reader = new BufferedReader(new FileReader("log.txt"));
+             BufferedWriter writer = new BufferedWriter(new FileWriter("archive.txt", true))) {
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Введите имя игрока: ");
-        String playerName = scanner.next();
-
-        Player player = players.get(playerName);
-        if (player != null) {
-            System.out.print("Введите номер игры для архивации: ");
-            int gameNumber = scanner.nextInt();
-            List<GameBoard> games = player.getPlayedGames();
-            if (gameNumber >= 1 && gameNumber <= games.size()) {
-                GameBoard gameToArchive = games.get(gameNumber - 1);
-                games.remove(gameToArchive);
-                System.out.println("Игра архивирована.");
-            } else {
-                System.out.println("Неверный номер игры.");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line + "\n");
             }
-        } else {
-            System.out.println("Игрок с именем " + playerName + " не найден.");
+            System.out.println("Игры архивированы.");
+        } catch (IOException e) {
+            System.out.println("Ошибка при архивации игр: " + e.getMessage());
         }
-    }}
+    }
+}
