@@ -77,4 +77,88 @@ class GameManager {
             }
         }
     }
+    public void startMultiGame(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Введите имя первого игрока или 'exit' для выхода: ");
+        String playerName1 = scanner.next();
+        System.out.print("Введите имя второго игрока или 'exit' для выхода: ");
+        String playerName2 = scanner.next();
+        if (playerName1.equalsIgnoreCase("admin")) {
+            adminManager.adminMode();
+        } else if (playerName1.equalsIgnoreCase("exit")) {
+            System.exit(0);
+        } else {
+            Player player = players.get(playerName1);
+            if (player == null)  {
+                player = new Player(playerName1);
+                player = new Player(playerName2);
+                players.put(playerName1, player);
+                players.put(playerName2,player);
+            }
+            GameBoard playerBoard2 = new GameBoard();
+            GameBoard playerBoard1 = new GameBoard();
+            player.addGame(playerBoard1);
+            System.out.println("Выберете расстановку кораблей " + playerName1);
+            System.out.println("1. Ручная");
+            System.out.println("2. Автоматическая");
+            int place = scanner.nextInt();
+            switch (place) {
+                case 1:
+                    playerBoard1.placeShipsMulti1();
+                    break;
+                case 2:
+                    playerBoard1.placeRandomShipsMulti(true);
+                    break;
+                default:
+                    System.out.println("Неверный выбор");
+            }
+            player.addGame(playerBoard2);
+            System.out.println("Выберете расстановку кораблей " + playerName2);
+            System.out.println("1. Ручная");
+            System.out.println("2. Автоматическая");
+            int place1 = scanner.nextInt();
+            switch (place1) {
+                case 1:
+                    playerBoard2.placeShipsMulti2();
+                    break;
+                case 2:
+                    playerBoard2.placeRandomShipsMulti(false);
+                    break;
+                default:
+                    System.out.println("Неверный выбор");
+            }
+
+
+            while (!playerBoard1.allShipsDestroyed()) {
+                System.out.println(playerName1 + " ваше поле:");
+                playerBoard1.printPlayerBoardMulti1();
+                System.out.println("Поле противника:");
+                playerBoard2.printEnemyBoardMulti2();
+                playerBoard1.playerMoveMulti1(playerBoard2);
+
+
+
+                System.out.println(playerName2 + " ваше поле:");
+                playerBoard2.printPlayerBoardMulti2();
+                System.out.println("Поле противника:");
+                playerBoard1.printEnemyBoardMulti1();
+                playerBoard2.playerMoveMulti2(playerBoard1);
+
+                if (playerBoard2.allShipsDestroyed() || playerBoard1.allShipsDestroyed()) {
+                    break; // Выходим из цикла, если все корабли противника уничтожены
+                }
+
+
+            }
+            if (playerBoard1.allShipsDestroyed()) {
+                System.out.println("Вы проиграли! Ваши корабли разрушены.");
+            } else {
+                System.out.println("Вы победили! Все корабли противника разрушены.");
+
+            }
+        }
+    }
+
+
 }

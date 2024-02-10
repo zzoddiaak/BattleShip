@@ -18,6 +18,8 @@ public class Main {
                     gameManager.startGame();
                     break;
                 case 2:
+                    GameManager gameManager2 = new GameManager();
+                    gameManager2.startMultiGame();
                     break;
                 case 3:
                     System.exit(0);
