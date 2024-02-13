@@ -96,8 +96,8 @@ class GameManager {
                 players.put(playerName1, player);
                 players.put(playerName2,player);
             }
-            GameBoard playerBoard2 = new GameBoard();
-            GameBoard playerBoard1 = new GameBoard();
+            MultiGameBoard playerBoard2 = new MultiGameBoard();
+            MultiGameBoard playerBoard1 = new MultiGameBoard();
             player.addGame(playerBoard1);
             System.out.println("Выберете расстановку кораблей " + playerName1);
             System.out.println("1. Ручная");
@@ -129,6 +129,7 @@ class GameManager {
                     System.out.println("Неверный выбор");
             }
 
+            Date startTime = new Date();
 
             while (!playerBoard1.allShipsDestroyed()) {
                 System.out.println(playerName1 + " ваше поле:");
@@ -151,6 +152,12 @@ class GameManager {
 
 
             }
+            Date endTime = new Date();
+
+            String logEntry = "Игра завершена. Игрок " + playerName1 + "против" + playerName2 +  ", Начало игры: " + startTime + ", Конец игры: " + endTime;
+
+            gameLog.writeLog(logEntry);
+
             if (playerBoard1.allShipsDestroyed()) {
                 System.out.println("Вы проиграли! Ваши корабли разрушены.");
             } else {
