@@ -130,9 +130,6 @@ class GameBoard {
         }
         return true; // Все корабли мертвы
     }
-    public boolean isGameOver() {
-        return allShipsDestroyed(true) || allShipsDestroyed(false);
-    }
 
     protected void checkIfShipKilled(int row, int col, char[][] board) {
         for (int i = row - 1; i <= row + 1; i++) {

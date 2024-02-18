@@ -74,11 +74,11 @@ public class MultiGameBoard extends  GameBoard{
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 if (board[i][j] == 'O') {
-                    return false; // Найден живой корабль
+                    return false;
                 }
             }
         }
-        return true; // Все корабли мертвы
+        return true;
     }
     public void placeShipsMulti1() {
         Scanner scanner = new Scanner(System.in);
