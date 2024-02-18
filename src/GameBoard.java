@@ -119,14 +119,21 @@ class GameBoard {
 
 
 
-    public boolean allShipsDestroyed() {
-        for (Ship ship : ships) {
-            if (!ship.isDestroyed()) {
-                return false;
+    public boolean allShipsDestroyed(boolean isPlayer) {
+        char[][] board = getBoard(isPlayer);
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (board[i][j] == 'O') {
+                    return false; // Найден живой корабль
+                }
             }
         }
-        return true;
+        return true; // Все корабли мертвы
     }
+    public boolean isGameOver() {
+        return allShipsDestroyed(true) || allShipsDestroyed(false);
+    }
+
     protected void checkIfShipKilled(int row, int col, char[][] board) {
         for (int i = row - 1; i <= row + 1; i++) {
             for (int j = col - 1; j <= col + 1; j++) {
@@ -150,6 +157,7 @@ class GameBoard {
         boolean isValidMove;
 
         do {
+
             System.out.print("Ваш ход! Введите координату (например, A3): ");
             String input = scanner.next().toUpperCase();
             col = input.charAt(0) - 'A';

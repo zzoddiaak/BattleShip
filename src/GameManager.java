@@ -49,34 +49,31 @@ class GameManager {
             enemyBoard.placeRandomShips(false);
 
             Date startTime = new Date();
-            while (!playerBoard.allShipsDestroyed()) {
+            while (true) {
+                if (enemyBoard.allShipsDestroyed(false)) {
+                    System.out.println("Победил игрок");
+                    break;
+                }
                 System.out.println("Ваше поле:");
                 playerBoard.printPlayerBoard();
                 System.out.println("Поле противника:");
                 enemyBoard.printEnemyBoard();
 
                 playerBoard.playerMove(enemyBoard);
-                if (enemyBoard.allShipsDestroyed()) {
-                    break; // Выходим из цикла, если все корабли противника уничтожены
-                }
-                // Ход противника (бота)
-                enemyBoard.botMove(playerBoard);
-                if (playerBoard.allShipsDestroyed()) {
+                if (playerBoard.allShipsDestroyed(true)) {
+                    System.out.println("Победил бот");
                     break;
                 }
+                enemyBoard.botMove(playerBoard);
+
 
             }
             Date endTime = new Date();
 
-            String logEntry = "Game finished: Player: " + playerName + ", Start Time: " + startTime + ", End Time: " + endTime;
+            String logEntry = "Игра завершена. Игрок  " + playerName + ", Начало: " + startTime + ", конец: " + endTime;
             gameLog.writeLog(logEntry);
 
-            if (playerBoard.allShipsDestroyed()) {
-                System.out.println("Вы проиграли! Ваши корабли разрушены.");
-            } else {
-                System.out.println("Вы победили! Все корабли противника разрушены.");
 
-            }
         }
     }
     public void startMultiGame(){
@@ -132,41 +129,42 @@ class GameManager {
 
             Date startTime = new Date();
 
-            while (!playerBoard1.allShipsDestroyed()) {
+            while (true) {
+                if (playerBoard2.allShipsDestroyedMulti(false)) {
+                    System.out.println("Победил " + playerName1);
+                    break;
+                }
                 System.out.println(playerName1 + " ваше поле:");
                 playerBoard1.printPlayerBoardMulti1();
                 System.out.println("Поле противника:");
                 playerBoard2.printEnemyBoardMulti2();
+                String turnLog1 = "Ход игрока " + playerName1 + " в " + new Date();
+                gameLog.writeLog(turnLog1);
+
                 playerBoard1.playerMoveMulti1(playerBoard2);
-
                 clearConsole.clearConsole();
-
+                if (playerBoard1.allShipsDestroyedMulti(true)) {
+                    System.out.println("Победил " + playerName2);
+                    break;
+                }
                 System.out.println(playerName2 + " ваше поле:");
                 playerBoard2.printPlayerBoardMulti2();
                 System.out.println("Поле противника:");
                 playerBoard1.printEnemyBoardMulti1();
+                String turnLog2 = "Ход игрока " + playerName2 + " в " + new Date();
+                gameLog.writeLog(turnLog2);
                 playerBoard2.playerMoveMulti2(playerBoard1);
-
                 clearConsole.clearConsole();
 
-                if (playerBoard2.allShipsDestroyed() || playerBoard1.allShipsDestroyed()) {
-                    break; // Выходим из цикла, если все корабли противника уничтожены
-                }
 
 
             }
             Date endTime = new Date();
 
-            String logEntry = "Игра завершена. Игрок " + playerName1 + "против" + playerName2 +  ", Начало игры: " + startTime + ", Конец игры: " + endTime;
+            String logEntry = "Игра завершена. Игрок " + playerName1 + " против " + playerName2 +  ", Начало игры: " + startTime + ", Конец игры: " + endTime;
 
             gameLog.writeLog(logEntry);
 
-            if (playerBoard1.allShipsDestroyed()) {
-                System.out.println("Вы проиграли! Ваши корабли разрушены.");
-            } else {
-                System.out.println("Вы победили! Все корабли противника разрушены.");
-
-            }
         }
     }
 
