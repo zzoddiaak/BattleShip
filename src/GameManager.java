@@ -1,6 +1,8 @@
 import java.util.*;
 import java.io.*;
 class GameManager {
+    private ClearConsole clearConsole = new ClearConsole();
+
     private Map<String, Player> players;
     private AdminManager adminManager;
     private GameLog gameLog;
@@ -79,7 +81,6 @@ class GameManager {
     }
     public void startMultiGame(){
         Scanner scanner = new Scanner(System.in);
-
         System.out.print("Введите имя первого игрока или 'exit' для выхода: ");
         String playerName1 = scanner.next();
         System.out.print("Введите имя второго игрока или 'exit' для выхода: ");
@@ -138,13 +139,15 @@ class GameManager {
                 playerBoard2.printEnemyBoardMulti2();
                 playerBoard1.playerMoveMulti1(playerBoard2);
 
-
+                clearConsole.clearConsole();
 
                 System.out.println(playerName2 + " ваше поле:");
                 playerBoard2.printPlayerBoardMulti2();
                 System.out.println("Поле противника:");
                 playerBoard1.printEnemyBoardMulti1();
                 playerBoard2.playerMoveMulti2(playerBoard1);
+
+                clearConsole.clearConsole();
 
                 if (playerBoard2.allShipsDestroyed() || playerBoard1.allShipsDestroyed()) {
                     break; // Выходим из цикла, если все корабли противника уничтожены
